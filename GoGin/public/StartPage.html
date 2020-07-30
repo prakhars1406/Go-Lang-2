@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>DID Lookup</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style type="text/css">
+.logo{
+    position: fixed;
+    left: 35%;
+    top: 145px;
+}
+#img_logo{
+	width:65%;
+}
+#qrcode{
+  margin-left: 1% !important;
+}
+.text3 {
+	width: 400px;
+    height: 30px;
+    border-radius: 0px;
+    font-family: sans-serif;
+    font-size: 22px;
+}
+input {
+	<!-- text-align: center; -->
+	overflow: hidden;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.searchBar{
+	position: absolute;
+    top: 240px;
+    bottom: 0;
+    left: 30%;
+    right: 30%;
+    margin: auto;
+}
+#search_logo{
+	width: 30px;
+    position: relative;
+    left: 45px;
+    top: 10px;
+}
+.bg {
+  /* The image used */
+  background-image: url("./images/Background.jpg");
+  /* Full height */
+  height: 520px;
+  width:100%;
+  /* Center and scale the image nicely */
+  background-repeat: no-repeat;
+  object-fit: cover;
+  background-position: bottom;
+}
+.close {
+  cursor: pointer;
+  position: relative;
+  left: -22px;
+  top: -2px;
+  font-style: normal;
+  font-size: 2.2em;
+}
+#close_btn{
+	color:gray;
+}
+#btnSubmit{
+	height:35px;
+  width:130px;
+  margin-left: 10px;
+  font-family: sans-serif;
+  font-size: 25px;
+	background:rgb(219, 144, 5);
+  color: white;
+  border: 2px solid rgb(219, 144, 5);
+}
+.error{
+	color:rgb(255, 0, 0);
+}
+.header a {
+  float: left;
+  color: black;
+  text-align: center;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 24px;
+  font-family:sans-serif;
+  line-height: 25px;
+  border-radius: 4px;
+}
+.header-right {
+  float: right;
+}
+.header-left {
+  float: left;;
+}
+#btnLogin{
+  color:white;
+  cursor: -webkit-grab;
+  cursor: pointer;
+}
+#did{
+font-size:15px;
+}
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 80px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* Modal Content */
+.modal-content {
+  background-color: #FEFEFE;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 35%;
+}
+.modal-content  img{
+	margin: auto;
+}
+/* The Close Button */
+.close_modal {
+  color: rgb(0, 88, 139);
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close_modal:hover,
+.close_modal:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.brand-heading{
+	color:rgb(255, 255, 255);
+	margin-left:12%;
+  font-size: 45px;
+  font-family: sans-serif;
+  
+}
+.Id_details{
+  height:300px;
+	background:white;
+	margin-top:0px;
+	padding-top: 15px;
+}
+.footer {
+  position : fixed ;
+  top : auto;
+   left: 0px;
+   bottom: 0px;
+   width: 100%;
+   background-color: rgb(0, 0, 0);
+   color: white;
+   text-align: center;
+   font-family: sans-serif;
+   overflow: hidden;
+}
+#loading {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  display: block;
+  opacity: 0.7;
+  background-color: #fff;
+  z-index: 99;
+  text-align: center;
+}
+
+#loading-image {
+  position: relative;
+  top: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 100;
+}
+</style>
+<script>
+var Url = 'http://localhost:8080/';
+var i=1;
+	function onChange() {
+   // your page initialization code here
+   // the DOM will be available here
+	var didValue=document.getElementById("did");
+	document.getElementById('did_error').innerHTML="";
+	if(didValue.value!=null && didValue.value!=""){
+		var x = document.getElementById("close_btn");
+		x.style.display = "block";
+	}
+	else{
+		var x = document.getElementById("close_btn");
+		x.style.display = "none";
+	}
+	
+};
+	function onClickClose(){
+		document.getElementById("did").value="";
+		var x = document.getElementById("close_btn");
+		x.style.display = "none";
+	}
+	const onSave =async()=> {
+    debugger;
+    document.getElementById("loading").style.visibility = "visible";
+		var did=document.getElementById("did").value;
+		var x = document.getElementById("close_btn");
+		x.style.display = "none";
+		const response = await fetch('/did/'+did, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const myJson = await response.json();
+      if(myJson.did===""){
+        document.getElementById("loading").style.visibility = "hidden";
+        document.getElementById('did_error').innerHTML = 'Did not found.';
+      }else{
+        document.getElementById("loading").style.visibility = "hidden";
+        window.location = '/DIDDetail?did='+did
+      }
+        //saved redirect to next page
+	}
+var modal = document.getElementById("myModal");
+// Get the button that opens the modal
+var btn = document.getElementById("btnLogin");
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+// When the user clicks the button, open the modal
+const openModal =async()=> {
+  debugger;
+  var x = document.getElementById("qrcode");
+  x.setAttribute("src",null);
+  document.getElementById("loading").style.visibility = "visible";
+  var modal = document.getElementById("myModal");
+  modal.style.display = "block";
+  var access_denied=document.getElementById("access_denied");
+	   access_denied.hidden=true;
+	   var x = document.getElementById("qrcode");
+	   x.hidden=false;
+  i=1;
+   const response = await fetch('/GetQr', {
+				 method: 'GET',
+				 headers: {
+				   'Content-Type': 'application/json'
+				}
+			  });
+  const myJson = await response.json();
+  document.getElementById("loading").style.visibility = "hidden";
+  var x = document.getElementById("qrcode");
+  x.setAttribute("src",myJson.data);
+  sample(myJson.txid);
+}
+// When the user clicks on <span> (x), close the modal
+function closeModal() {
+   var modal = document.getElementById("myModal");
+   modal.style.display = "none";
+   i=60;
+ }
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target.classList[0] == "modal") {
+	var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+	i=60;
+  }
+}
+	  async function delay(delayInms,txid) {
+      return new Promise(resolve  => {
+        setTimeout(async () => {
+			resolve(delayInms);
+        }, delayInms);
+      });
+    }
+    async function sample(txid) {
+	  while(i++<60){
+	  let delayres = await delay(2000,txid);
+		const response = await fetch('/Querytxid/'+txid, {
+					method: 'GET',
+					headers: {
+				    'Content-Type': 'application/json'
+				}
+			  });
+		const myJson = await response.json();
+    var jsonresponse=JSON.parse(JSON.parse(atob(myJson)));
+		if(jsonresponse.status=="COMPLETED"){
+      document.getElementById("loading").style.visibility = "visible";
+      i=100;
+      var jwt = jsonresponse.jwt;
+      debugger;
+      localStorage.setItem(
+      'token',
+      jwt
+    );
+			const decodedVal = decodeJWT(jwt);
+			const dataPayload = decodedVal.payload;
+    console.log('decodedVal', decodedVal, dataPayload);
+
+    const currentTime = new Date().getTime() / 1000;
+  
+    if (dataPayload.did && dataPayload.did.status === 500) {
+      // eslint-disable-next-line no-throw-literal
+      document.getElementById("loading").style.visibility = "hidden";
+      throw 'Invalid Login';
+    }
+    debugger;
+    const identDataRaw = JSON.parse(dataPayload.did);
+    var identData = {};
+    if (identDataRaw.result != null) {
+      identData = JSON.parse(identDataRaw.result)
+      console.log('identData', identData);
+      if (identData.other) {
+        const didDocument = Object.assign(
+          JSON.parse(identData.other),
+          identDataRaw.extdata,
+        );
+        data = didDocument;
+        console.log('didDocument3', didDocument);
+      } else {
+        data = identData;
+        console.log('didDocument4', data);
+      }
+    }
+    else {
+      data = identDataRaw;
+      identData = data;
+    }
+    if (data.Error) {
+      // eslint-disable-next-line no-throw-literal
+      throw 'Invalid Login';
+    }
+    debugger;
+    localStorage.setItem(
+      'profile',
+      JSON.stringify({ user: { id: data.id, username: data.id,name:data.name,email:data.email,publicKey:identData.publicKey } }),
+    );
+
+    const { endorsements } = data;
+    debugger;
+		 localStorage.setItem(
+					'endorsements',
+					JSON.stringify({ endorsements: endorsements }),
+		 );
+     document.getElementById("loading").style.visibility = "hidden";
+			window.location = '/MyProfile';
+		}
+	  }
+	  if(i==60){
+    document.getElementById("loading").style.visibility = "hidden";
+	   var access_denied=document.getElementById("access_denied");
+	   access_denied.hidden=false;
+	   var x = document.getElementById("qrcode");
+	   x.hidden=true;
+	  }
+    }
+    const keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+function encode(input) {
+  let output = '';
+  let chr1;
+  let chr2;
+  let chr3 = '';
+  let enc1;
+  let enc2;
+  let enc3;
+  let enc4 = '';
+  let i = 0;
+  do {
+    chr1 = input.charCodeAt(i++);
+    chr2 = input.charCodeAt(i++);
+    chr3 = input.charCodeAt(i++);
+    enc1 = chr1 >> 2;
+    enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+    enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+    enc4 = chr3 & 63;
+    if (isNaN(chr2)) {
+      enc3 = enc4 = 64;
+    } else if (isNaN(chr3)) {
+      enc4 = 64;
+    }
+    output =
+      output +
+      keyStr.charAt(enc1) +
+      keyStr.charAt(enc2) +
+      keyStr.charAt(enc3) +
+      keyStr.charAt(enc4);
+    chr1 = chr2 = chr3 = '';
+    enc1 = enc2 = enc3 = enc4 = '';
+  } while (i < input.length);
+  return output;
+}
+function decode(input) {
+  let output = '';
+  let chr1;
+  let chr2;
+  let chr3 = '';
+  let enc1;
+  let enc2;
+  let enc3;
+  let enc4 = '';
+  let i = 0;
+  // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+  const base64test = /[^A-Za-z0-9\+\/\=]/g;
+  if (base64test.exec(input)) {
+    window.alert(
+      'There were invalid base64 characters in the input text.\n' +
+        "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
+        'Expect errors in decoding.',
+    );
+  }
+  input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
+  do {
+    enc1 = keyStr.indexOf(input.charAt(i++));
+    enc2 = keyStr.indexOf(input.charAt(i++));
+    enc3 = keyStr.indexOf(input.charAt(i++));
+    enc4 = keyStr.indexOf(input.charAt(i++));
+    chr1 = (enc1 << 2) | (enc2 >> 4);
+    chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+    chr3 = ((enc3 & 3) << 6) | enc4;
+    output += String.fromCharCode(chr1);
+    if (enc3 !== 64) {
+      output += String.fromCharCode(chr2);
+    }
+    if (enc4 !== 64) {
+      output += String.fromCharCode(chr3);
+    }
+    chr1 = chr2 = chr3 = '';
+    enc1 = enc2 = enc3 = enc4 = '';
+  } while (i < input.length);
+  output = output.replace(/\0.*$/g, '');
+  console.log(output);
+  return output;
+}
+function decodeJWT(jwt) {
+  if (!jwt) {
+    throw new Error('no JWT passed into decodeJWT');
+  }
+  const parts = jwt.match(
+    /^([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+)$/,
+  );
+  if (parts) {
+    return {
+      header: JSON.parse(decode(parts[1])),
+      payload: JSON.parse(decode(parts[2])),
+      signature: parts[3],
+      data: `${parts[1]}.${parts[2]}`,
+    };
+  }
+  throw new Error('Incorrect format JWT');
+}
+window.onload =async()=> {
+  document.getElementById("loading").style.visibility = "hidden";
+}
+
+</script>
+<body style="
+">
+<div class="bg">
+<div class="form-style-3">
+<div class="header">
+  <div class="header-right">
+    <a id="btnLogin" onClick={openModal()}>My Profile</a>
+  </div>
+</div>
+<form >
+	<div>
+	
+	</div>
+	<div class="searchBar">
+		<h1 class="brand-heading">DID Lookup</h1>
+		<div style="display:flex">
+		<input type="text" placeholder="Enter a DID" class="text3" id="did" onkeypress="onChange()" />
+		<span class="close" id="close_btn" hidden onclick="onClickClose()" >&times;</span>
+		
+		
+		
+  <div id="divSubmit">
+  <input type="button" value="Search" onClick={onSave()} id="btnSubmit"/>
+  </div>
+  </div>
+  <p style="
+    padding-left: 10px;
+    margin-top: 8px;
+    font-family: sans-serif;
+    font-size: 22px;
+"><span class="error" id="did_error"></span></p>
+	</div>
+	
+</form>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close_modal" onClick={closeModal()}></span>
+    <p></p>
+	<img id="qrcode" style="width: 100%;" src="" alt="Unable to fetch QR code" />
+	<img id="access_denied"src="./images/access_denied.png" alt="Image Not found" />
+  </div>
+</div>
+</div>
+</div>
+<div class="Id_details">
+  <h1 style="
+  text-align: center;
+  font-family:sans-serif;
+"></h1>
+	<p style="
+    width: 80%;
+    margin: auto;
+    font-family: sans-serif;
+    font-size: 23px;
+    line-height: 26px;
+    margin-bottom: 35px;
+    text-align: justify;
+  text-justify: inter-word;
+">DID lookup portal allows you to save your DID details for public view and you can also search for other users DID details saved for public view.
+Thus you can confirm any DID before securing your documents for other users. </p>
+</div>
+<div class="footer">
+  <p ><a style=" color: rgb(255, 255, 255);text-decoration: none;font-size: 20px;font-family: sans-serif;" href="https://www.halialabs.io/">©Halialabs Pte Ltd,Singapore</a></p>
+</div>
+<div id="loading">
+  <img id="loading-image" src="images/loading.svg" alt="Loading..." />
+</div>
+</body>
+</html>

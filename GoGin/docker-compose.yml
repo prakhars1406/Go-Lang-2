@@ -1,0 +1,63 @@
+version: '3'
+services:
+  didlookup-service-app:
+    container_name: didlookup-service-app
+    build: .
+    environment:
+        - DB_USER=vou  
+        - DB_PASSWORD=vou
+        - DB_NAME=vou_db
+        - DB_HOST=didlookup-service-db
+        - DB_PORT=2768
+        - SERVICE_PORT=:8080
+        - URL=http://dev.emtrust.io/
+    ports: 
+      - 8080:8080 
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    depends_on:
+      - didlookup-service-db          
+    networks:
+      - halialabsnw_hlnw
+
+
+  didlookup-service-db:
+    image: postgres:latest
+    container_name: didlookup-service-db
+    environment:
+      - POSTGRES_USER=vou  
+      - POSTGRES_PASSWORD=vou
+      - POSTGRES_DB=vou_db
+      - DATABASE_HOST=didlookup-service-db
+    ports:
+      - '2768:2768'
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+    networks:
+      - halialabsnw_hlnw
+    
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: didlookup_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: app@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    depends_on:
+      - didlookup-service-db
+    ports:
+      - "5050:80"
+    networks:
+      - halialabsnw_hlnw
+    restart: unless-stopped
+
+
+volumes:
+  api:
+  database_postgres:                  
+
+
+# Networks to be created to facilitate communication between containers
+networks:
+  halialabsnw_hlnw:
+    external: true

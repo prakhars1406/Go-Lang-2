@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>DID Details</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+        .listOfEndorsements{
+    /* position: fixed;
+    margin-left: 258px;
+    margin-top: 330px; */
+    background-color: rgb(216, 252, 249);
+} 
+#customers {
+  font-family: sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin-left:40px
+  
+  
+}
+
+#customers td, #customers th {
+  border: 0px solid #ddd;
+  padding: 10px;
+  font-size: 16px;
+  color: black;
+  font-family: sans-serif;
+}
+
+
+#customers tr {
+  background-color: white;
+  font-size:20px
+}
+      .topnav {
+  overflow: hidden;
+  background-color: rgb(0, 0, 0);
+}
+
+.topnav a {
+  float: left;
+  color: #ffffff;
+  text-align: center;
+  padding: 6px 16px;
+  text-decoration: none;
+  font-size: 22px;
+  font-family: sans-serif;
+  height: 30px;
+}
+
+.topnav a:hover {
+  color: gray;
+}
+.footer {
+  position : fixed ;
+  top : auto;
+   left: 0px;
+   bottom: 0px;
+   width: 100%;
+   background-color: rgb(0, 0, 0);
+   color: white;
+   text-align: center;
+   font-family: sans-serif;
+   overflow: hidden;
+   height: 40px;
+   padding:5px;
+}
+.table>tbody>tr>td, .table>tbody>tr>th{
+    border-top: none;
+    font-size: 16px;
+    padding-right: 100px;
+    font-weight: normal;
+    font-family: sans-serif;
+    color: black;
+}
+.collapsible label{
+		padding-left:28px;
+    width: 155px;
+    font-weight: normal;
+  font-size: 16px;
+  font-family: sans-serif;
+}
+.content tabel{
+  padding-top:350px;
+  background-color: rgb(216, 252, 249);
+  font-size: 16px;
+  font-weight: normal;
+    font-family: sans-serif;
+    color: black;
+}
+.collapsible {
+  background-color: rgb(216, 252, 249);
+  cursor: pointer;
+  padding: 8px;
+  border: none;
+  text-align: left;
+  outline: none;
+  color: black;
+  font-size:16px;
+  font-weight: normal;
+    font-family: sans-serif;
+}
+
+.collapsible:after {
+  content: '\25B6';
+  color: black;
+  float: left;
+  background-color: rgb(216, 252, 249);
+  font-weight: normal;
+  font-size: 16px;
+  font-family: sans-serif;
+}
+
+.active:after {
+  content: "\25BC";
+  background-color: rgb(216, 252, 249);
+}
+.endorsementLabel{
+  width: 158px;
+  font-size: 16px;
+  color: black;
+  font-family: sans-serif;
+  font-weight: normal;
+}
+.content {
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  font-size:20px;
+  color: black;
+  font-family: sans-serif;
+}
+  </style>
+  <script>
+      window.onload =async()=> {
+    debugger;
+		var did='';
+		if (window.location.search.split('?').length > 1) {
+			var key = window.location.search.split('?')[1];
+			key=key.split('did=');
+			did=key;
+               }
+	  	const response = await fetch('/did/'+did[1], {
+		method: 'GET',
+		headers: {
+		  'Content-Type': 'application/json'
+		}
+	  });
+	  const myJson = await response.json();
+	  if(myJson.did===""||myJson.did===null){
+		alert("Did details not saved")
+	  }else{
+      if(myJson.pic===""||myJson.pic===null){
+        document.getElementById("ProfileImage").src = "./images/Recipient.PNG";
+      }else{
+        debugger;
+        document.getElementById("ProfileImage").src = "data:image/png;base64,"+myJson.pic;
+      }
+      debugger;
+    if(myJson.name===''||myJson.name===null){
+      document.getElementById("NameLbl").innerHTML='---';
+    }else{
+      document.getElementById("NameLbl").innerHTML=myJson.name;
+    }
+		if(myJson.email===''||myJson.email===null){
+      document.getElementById("EmailLbl").innerHTML='---';
+    }else{
+      document.getElementById("EmailLbl").innerHTML=myJson.email;
+    }
+    if(myJson.phone===''||myJson.phone===null){
+      document.getElementById("PhoneLbl").innerHTML='---';
+    }else{
+      document.getElementById("PhoneLbl").innerHTML=myJson.phone;
+    }
+    if(myJson.did===''||myJson.did===null){
+      document.getElementById("DidLbl").innerHTML='---';
+    }else{
+      document.getElementById("DidLbl").innerHTML=myJson.did;
+    }
+    if(myJson.about===''||myJson.about===null){
+      document.getElementById("AboutLbl").innerHTML='---';
+    }else{
+      document.getElementById("AboutLbl").innerHTML=myJson.about;
+    }
+    var endorsements=myJson.endorsement;
+    debugger;
+    endorsements.forEach(async function (endorsement, index) {
+      debugger;
+    var title = document.createElement("button");
+		title.className += "collapsible";
+		var nameTitle = document.createElement("label");
+    var typetxt = document.createTextNode("Account DID:");
+    
+		nameTitle.appendChild(typetxt);
+    title.appendChild(nameTitle);
+    debugger;
+    var nameTitle = document.createElement("label");
+    nameTitle.style.backgroundColor = "#d8fcf9";
+    nameTitle.style.color="black";
+		var typetxt = document.createTextNode(endorsement.accountDid);
+		nameTitle.appendChild(typetxt);
+		title.appendChild(nameTitle);
+		var content = document.createElement("div");
+		content.className += "content";
+		 var x = document.createElement("TABLE");
+      x.setAttribute("id", "customers");
+      x.setAttribute("class", "table");
+		  content.appendChild(x);
+		   var row = x.insertRow(0);
+		  var cell1 = row.insertCell(0);
+      cell1.className = "endorsementLabel";
+		  var cell2 = row.insertCell(1);
+		  cell1.innerHTML = "Role:";
+      cell1.style.backgroundColor = "#d8fcf9";
+      cell2.innerHTML = endorsement.type;
+      cell2.style.color="black";
+      cell2.style.backgroundColor = "#d8fcf9";
+      var row = x.insertRow(1);
+		  var cell1 = row.insertCell(0);
+      cell1.className = "endorsementLabel";
+		  var cell2 = row.insertCell(1);
+		  cell1.innerHTML = "Issuance Date:";
+      cell1.style.backgroundColor = "#d8fcf9";
+		  cell2.innerHTML = new Date(endorsement.date).toLocaleString();
+      cell2.style.color="black";
+      cell2.style.backgroundColor = "#d8fcf9";
+      var row = x.insertRow(2);
+		  var cell1 = row.insertCell(0);
+      cell1.className = "endorsementLabel";
+		  var cell2 = row.insertCell(1);
+		  cell1.innerHTML = "Description:";
+      cell1.style.backgroundColor = "#d8fcf9";
+		  cell2.innerHTML = endorsement.desc;
+      cell2.style.color="black";
+      cell2.style.backgroundColor = "#d8fcf9";
+		var parentElement = document.getElementById("listOfEndorsements");
+		parentElement.appendChild(title)
+		parentElement.appendChild(content)
+    });
+    var i;
+    var coll = document.getElementsByClassName("collapsible");
+    debugger;
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+  debugger;
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    } 
+  });
+}
+    }
+    
+    }
+	const onhome =async()=> {
+    window.location = '/DIDLookup';
+	}
+	
+  </script>
+</head>
+<body style="background-color:rgb(216, 252, 249)">
+    <nav class="navbar" style="background:black"> 
+        <div class="container-fluid">
+          <div class="navbar-header">
+          </div>
+          <ul class="nav navbar-nav" style="margin-top:5px">
+            <div  class="topnav" style="cursor: pointer;font-family: sans-serif;">
+                <a onClick={onhome()} >DID Lookup</a>
+            </div>
+          </ul>
+        </div>
+      </nav>
+    <div class="container" style="margin-bottom:50px">
+        <div class="col-sm-12 row">
+            <div class="col-sm-12" style="font-family: sans-serif;"><h3>My Did Details</h3></div>
+        </div>
+        <div class="col-sm-12 row">
+            <div class="col-sm-7">
+                <table class="table borderless" style="margin-left:60px;font-weight: normal;">
+                    <tbody>
+                    <tr>
+                        <th scope="row">DID</th>
+                        <td id="DidLbl">did:emtrust:xxxxxx</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Name</th>
+                        <td id="NameLbl">Jacob</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td id="EmailLbl">test@emtrust.io</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" style="padding-right:0px;">Phone No</th>
+                        <td id="PhoneLbl">9010xxxxx</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">About</th>
+                        <td id="AboutLbl" ></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3" style="text-align: center;">
+                <img class="img" style="width: 200px;height: 250px;object-fit: cover;text-align: center;" src="./images/Recipient.PNG" id="ProfileImage" alt="Image">
+            </div>
+        </div>
+        <div class="col-sm-12 row">
+            <div class="col-sm-12" style="font-family: sans-serif;"><h3>Endorsements</h3></div>
+            <div class="col-sm-12">
+              <div class="col-sm-11 listOfEndorsements"  id="listOfEndorsements"></div>
+            </div>
+        </div>
+</div>
+<div class="footer">
+    <p ><a style=" color: rgb(255, 255, 255);text-decoration: none;font-size: 20px;font-family: sans-serif;" href="https://www.halialabs.io/">©Halialabs Pte Ltd, Singapore</a></p>
+  </div>
+</body>
+</html>
