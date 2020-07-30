@@ -1,0 +1,55 @@
+version: '3'
+services:
+  account-service-app:
+    container_name: account-service-app
+    build: .
+    environment:
+      - DB_USER=vou  
+      - DB_PASSWORD=vou
+      - DB_NAME=vou_db
+      - DB_HOST=account-service-db
+      - DB_PORT=5432
+      - SERVICE_PORT=:8080
+      - DEBUG=OFF
+      - URL=http://emtrust.io
+      - API_BLOCKCHAIN_URL = http://emtrust.io/api/blockchain
+      - API_CRYPTO_URL = http://emtrust.io/api/crypto
+      - API_EVENT_URL = http://emtrust.io/api/events
+      - API_VOUCHER_SERVICE_URL = http://emtrust.io/api/voucher-service
+    ports: 
+      - 8080:8080 
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    depends_on:
+      - account-service-db          
+    networks:
+      - halialabsnw_hlnw
+
+
+  account-service-db:
+    image: postgres:latest
+    container_name: account-service-db
+    environment:
+      - POSTGRES_USER=vou  
+      - POSTGRES_PASSWORD=vou
+      - POSTGRES_DB=vou_db
+      - DATABASE_HOST=account-service-db
+    ports:
+      - '5432:5432'
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+    networks:
+      - halialabsnw_hlnw
+
+
+volumes:
+  api:
+  database_postgres:                  
+
+
+# Networks to be created to facilitate communication between containers
+networks:
+  halialabsnw_hlnw:
+    external: true
+

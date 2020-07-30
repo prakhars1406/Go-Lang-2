@@ -1,0 +1,30 @@
+{
+  "did": "did:emtrust:0x3f1984bbca614b380324",
+  "publicKey": "04e215d550aa706e2a0c22785188baba3b70855345a26260e7a726d93772c02fec47ccb7ac76738ac5d7f31487f5c072ecd8fbf15f0ed65332ce9292481c4590b8",
+  "didDocument": {
+    "@context": "https://w3id.org/did/v1",
+    "id": "did:emtrust:0x3f1984bbca614b380324",
+    "publicKey": [
+      {
+        "id": "did:emtrust:0x3f1984bbca614b380324",
+        "type": "ED25519SignatureVerification",
+        "controller": "did:emtrust:0x3f1984bbca614b380324",
+        "authorizations": []
+      }
+    ],
+    "authentication": [
+      "did:emtrust:0x3f1984bbca614b380324"
+    ],
+    "endorsements": [],
+    "service": [
+      {
+        "type": "MembershipService",
+        "id": "did:emtrust:0x3f1984bbca614b380324#membership",
+        "serviceEndpoint": "http://emtrust.io/accounts/did:emtrust:0x3f1984bbca614b380324",
+        "description": "Membership Service Eligible"
+      }
+    ],
+    "created": "Thu, 09 Jan 2020 08:47:42 GMT",
+    "updated": "Thu, 09 Jan 2020 08:47:42 GMT"
+  }
+}
