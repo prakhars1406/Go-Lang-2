@@ -1,0 +1,68 @@
+version: '3'
+services:
+  voucher-service-app:
+    container_name: voucher-service-app
+    build: .
+    environment:
+      - DB_USER=vou  
+      - DB_PASSWORD=vou
+      - DB_NAME=vou_db
+      - DB_HOST=voucher-service-db
+      - DB_PORT=5432
+      - SERVICE_PORT=:8080
+      - DEBUG=OFF
+      - API_BLOCKCHAIN_URL = http://emtrust.io/api/blockchain
+      - API_CRYPTO_URL = http://emtrust.io/api/crypto
+      - API_EVENT_URL = http://emtrust.io/api/events
+      - API_ACCOUNT_SERVICE_URL = http://emtrust.io/api/account-service
+    ports: 
+      - 8080:8080 
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    depends_on:
+      - voucher-service-db          
+    networks:
+      - halialabsnw_hlnw
+
+
+  voucher-service-db:
+    image: postgres:latest
+    container_name: voucher-service-db
+    environment:
+      - POSTGRES_USER=vou  
+      - POSTGRES_PASSWORD=vou
+      - POSTGRES_DB=vou_db
+      - DATABASE_HOST=voucher-service-db
+    ports:
+      - '5432:5432'
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+    networks:
+      - halialabsnw_hlnw
+    
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: app@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    depends_on:
+      - voucher-service-db
+    ports:
+      - "5050:80"
+    networks:
+      - halialabsnw_hlnw
+    restart: unless-stopped
+
+
+volumes:
+  api:
+  database_postgres:                  
+
+
+# Networks to be created to facilitate communication between containers
+networks:
+  halialabsnw_hlnw:
+    external: true
+
