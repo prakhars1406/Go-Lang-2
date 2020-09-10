@@ -1,0 +1,16 @@
+{
+    "packs":[
+            {
+                "id":1,
+                "channelId":[10,11,12],
+                "name":"Silver pack",
+                "price":50
+            },
+            {
+                "id":2,
+                "channelId":[10,11,12,13,14],
+                "name":"Gold pack",
+                "price":100
+            }
+        ]
+}

@@ -1,0 +1,29 @@
+{
+    "channels":[
+        {
+            "id":10,
+            "name":"Zee",
+            "price":10
+        },
+        {
+            "id":11,
+            "name":"Sony",
+            "price":15
+        },
+        {
+            "id":12,
+            "name":"Star Plus",
+            "price":20
+        },
+        {
+            "id":13,
+            "name":"Discovery",
+            "price":10
+        },
+        {
+            "id":14,
+            "name":"NatGeo",
+            "price":20
+        }
+    ]
+}
