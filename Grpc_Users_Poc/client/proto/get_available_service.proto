@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package server.protoservices;
+option go_package = ".;protoservices";
+
+message GetAavailableServiceRequest {
+    string name = 1;
+  }
+message GetAavailableServiceResponse {
+    string serviceName = 1;
+  }
+
+  service GetAavailableService {
+    rpc GetService(GetAavailableServiceRequest) returns (stream GetAavailableServiceResponse) {};
+}

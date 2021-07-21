@@ -1,0 +1,26 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+
+input RegisterRequest {
+  name: String!
+  email: String!
+  phone: String!
+  address: String!
+}
+type RegisterResponse  {
+  user_id: ID!
+  name: String!
+  email: String!
+  phone: String!
+  address: String!
+}
+
+type Mutation {
+  register(input: RegisterRequest!): RegisterResponse!
+}
+
+type Query {
+  getUser(id:ID!): RegisterResponse!
+}

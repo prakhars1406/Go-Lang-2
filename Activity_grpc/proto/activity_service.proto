@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package server.protoservices;
+option go_package = ".;protoservices";
+
+
+message UserActivity {
+  string user_id = 1;
+  string activity_type = 2;
+  string creation_time = 3;
+  string activity_duration = 4;
+  string label = 5;
+}
+
+message PlayRequest {
+  string userId = 1;
+  bool start=2; //True:Start activity,False:End activity
+}
+
+message PlayResponse {
+  string userId = 1;
+  string activityType = 2;  //play,sleep,read,eat
+  string activityStatus = 3;  //DONE:Completed,ACTIVE:On going activity
+  string activityStartTime=4;     
+  string activityEndTime=5;
+  string duration=6;
+  bool valid=7;
+  string activityLabel = 8;
+  string activityId = 9;
+}
+
+message SleepRequest {
+  string userId = 1;
+  bool start=2; //True:Start activity,False:End activity
+}
+
+message SleepResponse {
+  string userId = 1;
+  string activityType = 2;  //play,sleep,read,eat
+  string activityStatus = 3;  //DONE:Completed,ACTIVE:On going activity
+  string activityStartTime=4;     
+  string activityEndTime=5;
+  string duration=6;
+  bool valid=7;
+  string activityLabel = 8;
+  string activityId = 9;
+}
+
+message EatRequest {
+  string userId = 1;
+  bool start=2; //True:Start activity,False:End activity
+}
+
+message EatResponse {
+  string userId = 1;
+  string activityType = 2;  //play,sleep,read,eat
+  string activityStatus = 3;  //DONE:Completed,ACTIVE:On going activity
+  string activityStartTime=4;     
+  string activityEndTime=5;
+  string duration=6;
+  bool valid=7;
+  string activityLabel = 8;
+  string activityId = 9;
+}
+
+message ReadRequest {
+  string userId = 1;
+  bool start=2; //True:Start activity,False:End activity
+}
+
+message ReadResponse {
+  string userId = 1;
+  string activityType = 2;  //play,sleep,read,eat
+  string activityStatus = 3;  //DONE:Completed,ACTIVE:On going activity
+  string activityStartTime=4;     
+  string activityEndTime=5;
+  string duration=6;
+  bool valid=7;
+  string activityLabel = 8;
+  string activityId = 9;
+}
+
+service ActivityService {
+    rpc Play(PlayRequest) returns (PlayResponse) {};
+    rpc Sleep(SleepRequest) returns (SleepResponse) {};
+    rpc Eat(EatRequest) returns (EatResponse) {};
+    rpc Read(ReadRequest) returns (ReadResponse) {};
+}

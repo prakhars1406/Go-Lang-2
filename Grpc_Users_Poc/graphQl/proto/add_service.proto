@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package server.protoservices;
+option go_package = ".;protoservices";
+
+message AddServiceRequest {
+    string serviceName = 1;
+  }
+message AddServiceResponse {
+    string message = 1;
+  }
+
+  service AddService {
+    rpc AddService(stream AddServiceRequest) returns (AddServiceResponse) {};
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package server.protoservices;
+option go_package = ".;protoservices";
+
+message CheckUserServiceRequest {
+    string serviceName = 1;
+  }
+message CheckUserServiceResponse {
+    string message = 1;
+  }
+
+  service CheckUserService {
+    rpc CheckUserService(stream CheckUserServiceRequest) returns (stream CheckUserServiceResponse) {};
+}

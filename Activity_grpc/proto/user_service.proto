@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package server.protoservices;
+option go_package = ".;protoservices";
+
+
+message NewUserRequest {
+  string name = 1;
+  string email = 2;
+  string phone = 3;
+}
+
+message NewUserResponse {
+  string userId = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+}
+
+message UpdateActivityRequest {
+  string userId = 1;
+  string activityType = 2;
+  bool activityStart=3;     //True:Start activity,False:End Activity
+  string activityLabel = 4;
+}
+
+message UpdateActivityResponse {
+  string userId = 1;
+  string activityType = 2;
+  string activityStatus = 3;  //DONE:Completed,ACTIVE:On going activity
+  string activityStartTime=4;     
+  string activityEndTime=5;
+  string duration=6;
+  bool valid=7;
+  string activityLabel = 8;
+  string activityId = 9;
+}
+
+message QueryUserRequest {
+  string userId = 1;
+}
+
+message QueryUserResponse {
+  string userId = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+}
+
+message QueryActivityRequest {
+  string userId = 1;
+}
+
+message QueryActivityResponse {
+  string userId = 1;
+  string activityType = 2;
+  string activityStatus = 3;  //DONE:Completed,ACTIVE:On going activity
+  string activityStartTime=4;     
+  string activityEndTime=5;
+  string duration=6;
+  bool valid=7;
+  string activityLabel = 8;
+  string activityId = 9;
+}
+
+service UserService {
+    rpc AddUser(NewUserRequest) returns (NewUserResponse) {};
+    rpc UpdateActivity(UpdateActivityRequest) returns (UpdateActivityResponse) {};
+    rpc QueryUser(QueryUserRequest) returns (QueryUserResponse) {};
+    rpc QueryActivity(QueryActivityRequest) returns (QueryActivityResponse) {};
+}
